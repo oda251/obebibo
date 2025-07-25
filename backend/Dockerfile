@@ -17,26 +17,19 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 # Create app directory
 WORKDIR /rails
 
-# Copy Gemfile and Gemfile.lock
-COPY Gemfile Gemfile.lock* ./
-
-# Configure SSL settings for gem installation
-ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
-RUN bundle config set --global ssl_verify_mode 0
-RUN bundle install
-
 # Copy the application
 COPY . .
 
 # Set executable permissions for bin files
 RUN chmod +x bin/*
 
+# Create tmp directory for pids
+RUN mkdir -p tmp/pids
+
 # Set environment variables
 ENV RAILS_ENV=development
 ENV RAILS_LOG_TO_STDOUT=true
-
-# Create tmp directory for pids
-RUN mkdir -p tmp/pids
+ENV BUNDLE_SSL_VERIFY_NONE=true
 
 # Expose port
 EXPOSE 80

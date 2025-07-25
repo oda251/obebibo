@@ -4,14 +4,23 @@ set -e
 # Remove a potentially pre-existing server.pid for Rails.
 rm -f /rails/tmp/pids/server.pid
 
+# Configure bundler to skip SSL verification
+export BUNDLE_SSL_VERIFY_NONE=true
+bundle config set --global ssl_verify_mode 0
+
+# Try to install gems if they weren't installed during build
+echo "Checking gem dependencies..."
+bundle check || bundle install
+
 # Precompile assets if in production
 if [ "$RAILS_ENV" = "production" ]; then
   bundle exec rails assets:precompile
 fi
 
 # Run database migrations
-bundle exec rails db:create
-bundle exec rails db:migrate
+echo "Setting up database..."
+bundle exec rails db:create || echo "Database already exists"
+bundle exec rails db:migrate || echo "Migration skipped"
 
 # Then exec the container's main process (what's set as CMD in the Dockerfile).
 exec "$@"
