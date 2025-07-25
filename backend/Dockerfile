@@ -6,7 +6,9 @@ RUN apt-get update -qq && apt-get install -y \
   libpq-dev \
   nodejs \
   npm \
-  curl
+  curl \
+  ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js and npm
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
@@ -15,21 +17,32 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 # Create app directory
 WORKDIR /rails
 
-# Copy Gemfile
-COPY Gemfile ./
+# Copy Gemfile and Gemfile.lock
+COPY Gemfile Gemfile.lock* ./
 
-# Install gems
+# Configure SSL settings for gem installation
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+RUN bundle config set --global ssl_verify_mode 0
 RUN bundle install
 
 # Copy the application
 COPY . .
 
+# Set executable permissions for bin files
+RUN chmod +x bin/*
+
 # Set environment variables
 ENV RAILS_ENV=development
 ENV RAILS_LOG_TO_STDOUT=true
 
+# Create tmp directory for pids
+RUN mkdir -p tmp/pids
+
 # Expose port
 EXPOSE 80
+
+# Set the entrypoint
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the Rails server
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "80"]
