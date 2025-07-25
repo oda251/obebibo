@@ -1,0 +1,110 @@
+<div class="max-w-4xl mx-auto">
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <% if @campaign.image_url.present? %>
+      <img src="<%= @campaign.image_url %>" alt="<%= @campaign.title %>" class="w-full h-64 object-cover">
+    <% end %>
+    
+    <div class="p-8">
+      <div class="mb-6">
+        <h1 class="text-3xl font-bold mb-4"><%= @campaign.title %></h1>
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-lg font-bold <%= @campaign.active? ? 'text-green-600' : 'text-red-600' %>">
+            <%= @campaign.active? ? '募集中' : '募集終了' %>
+          </span>
+          <span class="text-gray-600">提供: <%= @campaign.company.name %></span>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h2 class="text-xl font-bold mb-4">商品詳細</h2>
+        <div class="prose max-w-none">
+          <%= simple_format(@campaign.description) %>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-gray-50 p-4 rounded">
+          <h3 class="font-bold mb-2">応募期間</h3>
+          <p><%= @campaign.start_at.strftime('%Y年%m月%d日') %> 〜 <%= @campaign.end_at.strftime('%Y年%m月%d日') %></p>
+        </div>
+        <div class="bg-gray-50 p-4 rounded">
+          <h3 class="font-bold mb-2">応募状況</h3>
+          <p>現在の応募者数: <%= @campaign.entry_count %>名</p>
+        </div>
+      </div>
+
+      <% if @reviews.any? %>
+        <div class="mb-8">
+          <h3 class="text-xl font-bold mb-4">レビュー (平均評価: ★<%= @campaign.average_rating %>)</h3>
+          <div class="space-y-4">
+            <% @reviews.each do |review| %>
+              <div class="bg-gray-50 p-4 rounded">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-medium"><%= review.user.name %></span>
+                  <div class="flex items-center">
+                    <% review.rating.times do %>
+                      ★
+                    <% end %>
+                    <span class="ml-2 text-sm text-gray-500"><%= review.created_at.strftime('%Y/%m/%d') %></span>
+                  </div>
+                </div>
+                <p class="text-gray-700"><%= review.comment %></p>
+              </div>
+            <% end %>
+          </div>
+          
+          <% if @reviews.respond_to?(:current_page) %>
+            <div class="mt-4">
+              <%= paginate @reviews, param_name: :page %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="border-t pt-6">
+        <% if user_signed_in? %>
+          <% if @user_entry %>
+            <div class="bg-blue-50 p-4 rounded mb-4">
+              <p class="font-medium">
+                応募状況: 
+                <span class="<%= entry_status_class(@user_entry.status) %>">
+                  <%= entry_status_text(@user_entry.status) %>
+                </span>
+              </p>
+              <p class="text-sm text-gray-600 mt-1">応募日: <%= @user_entry.created_at.strftime('%Y年%m月%d日') %></p>
+            </div>
+            
+            <% if @user_entry.can_review? && !@user_entry.has_review? %>
+              <%= form_with model: [@campaign, Review.new], local: true, class: "space-y-4" do |form| %>
+                <div>
+                  <%= form.label :rating, "評価", class: "form-label" %>
+                  <%= form.select :rating, options_for_select([[5, '★★★★★ 非常に良い'], [4, '★★★★☆ 良い'], [3, '★★★☆☆ 普通'], [2, '★★☆☆☆ 悪い'], [1, '★☆☆☆☆ 非常に悪い']]), { prompt: '評価を選択してください' }, { class: "form-input" } %>
+                </div>
+                <div>
+                  <%= form.label :comment, "コメント", class: "form-label" %>
+                  <%= form.text_area :comment, rows: 4, class: "form-input", placeholder: "商品の感想をお聞かせください" %>
+                </div>
+                <%= form.submit "レビューを投稿", class: "btn btn-primary" %>
+              <% end %>
+            <% end %>
+          <% elsif @can_apply %>
+            <%= link_to "この案件に応募する", campaign_entry_path(@campaign), method: :get, class: "btn btn-primary text-lg px-8 py-3" %>
+          <% elsif @campaign.application_period? %>
+            <p class="text-gray-600">この案件に応募するにはログインが必要です。</p>
+            <%= link_to "ログイン", new_user_session_path, class: "btn btn-primary" %>
+          <% else %>
+            <p class="text-red-600">応募期間が終了しています。</p>
+          <% end %>
+        <% else %>
+          <% if @campaign.application_period? %>
+            <p class="text-gray-600 mb-4">この案件に応募するにはログインが必要です。</p>
+            <%= link_to "ログイン", new_user_session_path, class: "btn btn-primary mr-4" %>
+            <%= link_to "会員登録", new_user_registration_path, class: "btn btn-secondary" %>
+          <% else %>
+            <p class="text-red-600">応募期間が終了しています。</p>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

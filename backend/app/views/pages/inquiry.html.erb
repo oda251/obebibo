@@ -1,0 +1,79 @@
+<div class="max-w-2xl mx-auto">
+  <div class="bg-white rounded-lg shadow-md p-8">
+    <h1 class="text-3xl font-bold mb-8">お問い合わせ</h1>
+    
+    <div class="mb-8">
+      <p class="text-gray-600 mb-4">
+        Obebiboに関するご質問やご要望がございましたら、下記のフォームからお気軽にお問い合わせください。
+      </p>
+      <p class="text-gray-600">
+        お問い合わせいただいた内容については、順次確認の上、回答させていただきます。
+      </p>
+    </div>
+
+    <%= form_with url: inquiry_path, method: :post, local: true, class: "space-y-6" do |form| %>
+      <div>
+        <%= form.label :name, "お名前", class: "form-label" %>
+        <%= form.text_field :name, class: "form-input", required: true %>
+      </div>
+
+      <div>
+        <%= form.label :email, "メールアドレス", class: "form-label" %>
+        <%= form.email_field :email, class: "form-input", required: true %>
+      </div>
+
+      <div>
+        <%= form.label :subject, "件名", class: "form-label" %>
+        <%= form.select :subject, 
+            options_for_select([
+              ['一般的なお問い合わせ', 'general'],
+              ['サービスについて', 'service'],
+              ['技術的な問題', 'technical'],
+              ['アカウントについて', 'account'],
+              ['その他', 'other']
+            ]), 
+            { prompt: '選択してください' }, 
+            { class: "form-input", required: true } %>
+      </div>
+
+      <div>
+        <%= form.label :message, "お問い合わせ内容", class: "form-label" %>
+        <%= form.text_area :message, rows: 6, class: "form-input", required: true, placeholder: "お問い合わせ内容を詳しくお書きください" %>
+      </div>
+
+      <div class="bg-gray-50 p-4 rounded">
+        <h3 class="font-bold mb-2">個人情報の取り扱いについて</h3>
+        <p class="text-sm text-gray-600 mb-3">
+          お客様からいただいた個人情報は、お問い合わせの回答および今後のサービス向上のためにのみ使用し、
+          お客様の同意なく第三者に提供することはございません。
+        </p>
+        <div class="flex items-start">
+          <input type="checkbox" id="privacy_agreement" name="privacy_agreement" class="mr-2 mt-1" required>
+          <label for="privacy_agreement" class="text-sm text-gray-700">
+            <%= link_to "プライバシーポリシー", privacy_path, class: "text-blue-600 hover:underline", target: "_blank" %>
+            に同意します
+          </label>
+        </div>
+      </div>
+
+      <div class="pt-4">
+        <%= form.submit "送信", class: "btn btn-primary w-full" %>
+      </div>
+    <% end %>
+
+    <div class="mt-8 pt-6 border-t">
+      <h3 class="font-bold mb-4">その他のお問い合わせ方法</h3>
+      <div class="space-y-2 text-sm text-gray-600">
+        <p><strong>メール:</strong> support@obebibo.com</p>
+        <p><strong>営業時間:</strong> 平日 9:00〜18:00（土日祝日除く）</p>
+        <p class="text-xs text-gray-500 mt-4">
+          ※お問い合わせの内容によっては、回答にお時間をいただく場合がございます。予めご了承ください。
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-8 text-center">
+      <%= link_to "トップページに戻る", root_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+</div>

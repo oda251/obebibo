@@ -1,0 +1,64 @@
+<div class="max-w-2xl mx-auto text-center">
+  <div class="bg-white rounded-lg shadow-md p-8">
+    <div class="mb-6">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h1 class="text-2xl font-bold text-green-600 mb-2">応募完了</h1>
+      <p class="text-gray-600">ご応募ありがとうございました。</p>
+    </div>
+
+    <div class="mb-8">
+      <h2 class="text-lg font-bold mb-4">応募内容</h2>
+      <div class="bg-gray-50 p-4 rounded text-left">
+        <h3 class="font-bold mb-2"><%= @campaign.title %></h3>
+        <p class="text-sm text-gray-600 mb-2">応募日: <%= @entry.created_at.strftime('%Y年%m月%d日 %H:%M') %></p>
+        <p class="text-sm text-gray-600">応募状況: <span class="<%= entry_status_class(@entry.status) %>"><%= entry_status_text(@entry.status) %></span></p>
+      </div>
+    </div>
+
+    <div class="mb-8 text-left">
+      <h2 class="text-lg font-bold mb-4">今後の流れ</h2>
+      <div class="space-y-3">
+        <div class="flex items-start">
+          <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
+            <span class="text-xs font-bold text-blue-600">1</span>
+          </div>
+          <div>
+            <p class="font-medium">当選者発表</p>
+            <p class="text-sm text-gray-600">応募締切後、当選者にメールでお知らせします</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start">
+          <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
+            <span class="text-xs font-bold text-blue-600">2</span>
+          </div>
+          <div>
+            <p class="font-medium">商品発送</p>
+            <p class="text-sm text-gray-600">当選者の登録住所に商品をお送りします</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start">
+          <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
+            <span class="text-xs font-bold text-blue-600">3</span>
+          </div>
+          <div>
+            <p class="font-medium">レビュー投稿</p>
+            <p class="text-sm text-gray-600">商品到着後、7日以内にレビューをお願いします</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t pt-6">
+      <div class="flex space-x-4 justify-center">
+        <%= link_to "案件一覧に戻る", campaigns_path, class: "btn btn-primary" %>
+        <%= link_to "マイページ", mypage_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>
