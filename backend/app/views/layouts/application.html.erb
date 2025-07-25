@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Obebibo - 試供品・モニター案件サイト</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <header class="bg-blue-600 text-white p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <%= link_to "Obebibo", root_path, class: "text-2xl font-bold" %>
+        
+        <nav class="flex items-center space-x-4">
+          <%= link_to "案件一覧", campaigns_path, class: "hover:underline" %>
+          
+          <% if user_signed_in? %>
+            <%= link_to "マイページ", mypage_path, class: "hover:underline" %>
+            <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "hover:underline" %>
+          <% else %>
+            <%= link_to "ログイン", new_user_session_path, class: "hover:underline" %>
+            <%= link_to "会員登録", new_user_registration_path, class: "hover:underline" %>
+          <% end %>
+          
+          <% if admin_signed_in? %>
+            <%= link_to "管理画面", admin_root_path, class: "bg-red-500 px-3 py-1 rounded hover:bg-red-600" %>
+          <% end %>
+        </nav>
+      </div>
+    </header>
+
+    <% if notice %>
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded m-4">
+        <%= notice %>
+      </div>
+    <% end %>
+
+    <% if alert %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded m-4">
+        <%= alert %>
+      </div>
+    <% end %>
+
+    <main class="container mx-auto px-4 py-8">
+      <%= yield %>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-8 mt-16">
+      <div class="container mx-auto text-center">
+        <div class="mb-4">
+          <%= link_to "利用規約", terms_path, class: "hover:underline mx-2" %>
+          <%= link_to "プライバシーポリシー", privacy_path, class: "hover:underline mx-2" %>
+          <%= link_to "お問い合わせ", inquiry_path, class: "hover:underline mx-2" %>
+        </div>
+        <p>&copy; 2024 Obebibo. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

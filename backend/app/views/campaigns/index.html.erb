@@ -1,0 +1,60 @@
+<div class="mb-8">
+  <h1 class="text-3xl font-bold mb-4">案件一覧</h1>
+  
+  <% if @recommended_campaigns.any? %>
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold mb-4">おすすめ案件</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <% @recommended_campaigns.each do |campaign| %>
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <% if campaign.image_url.present? %>
+              <img src="<%= campaign.image_url %>" alt="<%= campaign.title %>" class="w-full h-48 object-cover rounded mb-4">
+            <% end %>
+            <h3 class="text-xl font-bold mb-2"><%= campaign.title %></h3>
+            <p class="text-gray-600 mb-4"><%= truncate(campaign.description, length: 100) %></p>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">応募締切: <%= campaign.end_at.strftime('%Y/%m/%d') %></span>
+              <%= link_to "詳細を見る", campaign_path(campaign), class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <% @campaigns.each do |campaign| %>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <% if campaign.image_url.present? %>
+        <img src="<%= campaign.image_url %>" alt="<%= campaign.title %>" class="w-full h-48 object-cover rounded mb-4">
+      <% end %>
+      <h3 class="text-xl font-bold mb-2"><%= campaign.title %></h3>
+      <p class="text-gray-600 mb-4"><%= truncate(campaign.description, length: 100) %></p>
+      <div class="mb-4">
+        <div class="flex justify-between text-sm text-gray-500">
+          <span>応募開始: <%= campaign.start_at.strftime('%Y/%m/%d') %></span>
+          <span>応募締切: <%= campaign.end_at.strftime('%Y/%m/%d') %></span>
+        </div>
+        <div class="mt-2">
+          <span class="text-sm text-gray-500">応募者数: <%= campaign.entry_count %>名</span>
+          <% if campaign.reviews.any? %>
+            <span class="ml-4 text-sm text-gray-500">評価: ★<%= campaign.average_rating %></span>
+          <% end %>
+        </div>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-sm font-bold <%= campaign.active? ? 'text-green-600' : 'text-red-600' %>">
+          <%= campaign.active? ? '募集中' : '募集終了' %>
+        </span>
+        <%= link_to "詳細を見る", campaign_path(campaign), class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if @campaigns.respond_to?(:current_page) %>
+  <div class="mt-8 flex justify-center">
+    <%= paginate @campaigns %>
+  </div>
+<% end %>

@@ -1,0 +1,75 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+@import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow-md p-6;
+}
+
+.btn {
+  @apply px-4 py-2 rounded font-medium transition-colors;
+}
+
+.btn-primary {
+  @apply bg-blue-500 text-white hover:bg-blue-600;
+}
+
+.btn-secondary {
+  @apply bg-gray-500 text-white hover:bg-gray-600;
+}
+
+.btn-danger {
+  @apply bg-red-500 text-white hover:bg-red-600;
+}
+
+.form-input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.alert {
+  @apply px-4 py-3 rounded mb-4;
+}
+
+.alert-success {
+  @apply bg-green-100 border border-green-400 text-green-700;
+}
+
+.alert-error {
+  @apply bg-red-100 border border-red-400 text-red-700;
+}
+
+.alert-warning {
+  @apply bg-yellow-100 border border-yellow-400 text-yellow-700;
+}
+
+.alert-info {
+  @apply bg-blue-100 border border-blue-400 text-blue-700;
+}
