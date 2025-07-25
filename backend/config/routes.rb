@@ -71,9 +71,9 @@ Rails.application.routes.draw do
     end
     
     namespace :auth do
-      post :register
-      post :login
-      post :logout
+      post :register, to: 'auth#register'
+      post :login, to: 'auth#login'
+      post :logout, to: 'auth#logout'
     end
     
     namespace :admin do

@@ -15,8 +15,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 # Create app directory
 WORKDIR /rails
 
-# Copy Gemfile and Gemfile.lock
-COPY Gemfile Gemfile.lock ./
+# Copy Gemfile
+COPY Gemfile ./
 
 # Install gems
 RUN bundle install
