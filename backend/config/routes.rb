@@ -32,7 +32,8 @@ Rails.application.routes.draw do
 
   get 'mypage', to: 'users#show'
   namespace :mypage do
-    resources :reviews, only: [:new, :create]
+    get 'review/:id', to: 'reviews#new', as: 'review'
+    post 'review/:id', to: 'reviews#create'
   end
 
   # Static pages

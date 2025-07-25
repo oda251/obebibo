@@ -2,7 +2,7 @@ class Api::ApplicationController < ActionController::API
   include ActionController::RequestForgeryProtection
   
   protect_from_forgery with: :null_session
-  before_action :authenticate_user!, except: [:index, :show]
+  # Don't apply authentication globally to avoid conflicts with Devise
 
   respond_to :json
 

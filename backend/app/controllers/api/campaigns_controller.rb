@@ -1,5 +1,6 @@
 class Api::CampaignsController < Api::ApplicationController
   before_action :set_campaign, only: [:show, :entry, :reviews]
+  before_action :authenticate_user!, only: [:entry]
 
   def index
     @campaigns = Campaign.active_campaigns.current
