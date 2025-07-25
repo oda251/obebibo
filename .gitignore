@@ -1,0 +1,16 @@
+# dotenv
+.env
+
+# Rails
+/log/
+/tmp/
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/public/assets
+.byebug_history
+
+# node_modules
+node_modules/
+
+# macOS
+.DS_Store
