@@ -1,0 +1,90 @@
+<% content_for :title, "レビュー投稿" %>
+
+<div class="max-w-4xl mx-auto p-6">
+  <div class="bg-white rounded-lg shadow-md p-6">
+    <h1 class="text-2xl font-bold mb-6">レビュー投稿</h1>
+    
+    <!-- Campaign info -->
+    <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+      <h2 class="text-lg font-semibold"><%= @campaign.title %></h2>
+      <p class="text-gray-600 mt-2"><%= @campaign.description %></p>
+    </div>
+
+    <%= form_with model: [@campaign, @review], url: mypage_review_path(@campaign), local: true, class: "space-y-6" do |form| %>
+      <% if @review.errors.any? %>
+        <div class="bg-red-50 border border-red-200 rounded-md p-4">
+          <h3 class="text-red-800 font-medium">エラーが発生しました:</h3>
+          <ul class="mt-2 text-red-700">
+            <% @review.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          評価 <span class="text-red-500">*</span>
+        </label>
+        <div class="flex space-x-2">
+          <% (1..5).each do |rating| %>
+            <label class="cursor-pointer">
+              <%= form.radio_button :rating, rating, class: "hidden", id: "rating_#{rating}" %>
+              <span class="star text-2xl text-gray-300 hover:text-yellow-400" data-rating="<%= rating %>">★</span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          コメント <span class="text-red-500">*</span>
+        </label>
+        <%= form.text_area :comment, rows: 6, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500", placeholder: "商品の感想をお聞かせください..." %>
+      </div>
+
+      <div class="flex space-x-4">
+        <%= form.submit "レビューを投稿", class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+        <%= link_to "キャンセル", mypage_path, class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const stars = document.querySelectorAll('.star');
+  const ratingInputs = document.querySelectorAll('input[name="review[rating]"]');
+  
+  stars.forEach((star, index) => {
+    star.addEventListener('click', function() {
+      const rating = this.dataset.rating;
+      ratingInputs[index].checked = true;
+      updateStars(rating);
+    });
+    
+    star.addEventListener('mouseenter', function() {
+      const rating = this.dataset.rating;
+      updateStars(rating);
+    });
+  });
+  
+  document.querySelector('.flex.space-x-2').addEventListener('mouseleave', function() {
+    const checkedInput = document.querySelector('input[name="review[rating]"]:checked');
+    const rating = checkedInput ? checkedInput.value : 0;
+    updateStars(rating);
+  });
+  
+  function updateStars(rating) {
+    stars.forEach((star, index) => {
+      if (index < rating) {
+        star.classList.remove('text-gray-300');
+        star.classList.add('text-yellow-400');
+      } else {
+        star.classList.remove('text-yellow-400');
+        star.classList.add('text-gray-300');
+      }
+    });
+  }
+});
+</script>

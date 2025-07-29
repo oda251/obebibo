@@ -22,6 +22,7 @@
   - 利用確認
 
 ## 実行方法
+
 - `docker compose up -d`で起動
   - ローカル環境のみ想定
 
@@ -139,3 +140,13 @@
   - lookbook（Rails 用 UI カタログ/ドキュメント生成）
   - daisyUI（Tailwind CSS ベースの UI コンポーネント、必要に応じて JS で利用）
 - JavaScript（必要に応じて、動的 UI やインタラクションで利用）
+
+---
+
+## UI カラー・文言管理ガイドライン
+
+- サービス全体で使用する色（カラーパレット）や文言（ラベル・メッセージ・ボタン名等）は、一覧で参照・管理できる仕組みを導入する。
+- 色は `config/colors.yml` や `app/assets/stylesheets/_colors.scss` などで一元管理し、View/Component で参照する。
+- 文言は `config/locales/ja.yml` など i18n ファイルで一元管理し、View/Component/Controller で参照する。
+- 新規追加・変更時は必ず一覧ファイルを更新し、重複・表記揺れを防ぐ。
+- UI/UX・アクセシビリティ観点から、色・文言の統一・管理を徹底する。
