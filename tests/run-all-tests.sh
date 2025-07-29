@@ -20,7 +20,6 @@ else
 fi
 
 echo ""
-
 # Navigate to tests directory
 cd "$(dirname "$0")"
 
@@ -36,39 +35,32 @@ echo "🌐 Running endpoint validation..."
 npm run validate
 echo ""
 
+# Check if browsers are installed
+echo "🌍 Checking browser availability..."
+if npx playwright -V &>/dev/null; then
+else
+    npx install playwright
+fi
+
+echo "✅ Browsers are available - running full E2E tests..."
+echo ""
+
 # Run HTTP-based tests
 echo "🧪 Running HTTP-based E2E tests..."
 echo "   (These tests validate all endpoints without requiring browser automation)"
 npx playwright test specs/http-based.spec.js --reporter=line
 echo ""
 
-# Check if browsers are installed
-echo "🌍 Checking browser availability..."
-if npx playwright install-deps chromium --dry-run &>/dev/null && [ -d ~/.cache/ms-playwright/chromium* ] 2>/dev/null; then
-    echo "✅ Browsers are available - running full E2E tests..."
-    echo ""
-    
-    # Run basic E2E tests
-    echo "🎭 Running basic E2E tests..."
-    npx playwright test specs/public-pages.spec.js specs/user-auth.spec.js specs/admin-auth.spec.js specs/campaign-interactions.spec.js specs/all-endpoints.spec.js --reporter=line
-    
-    echo ""
-    echo "🛤️  Running user journey tests..."
-    npx playwright test specs/journeys/ --reporter=html
-    
-    echo ""
-    echo "📊 Test report generated - run 'npm run test:report' to view"
-    
-elif command -v chromium &> /dev/null || command -v google-chrome &> /dev/null; then
-    echo "⚠️  Playwright browsers not installed, but system browsers available"
-    echo "💡 Install Playwright browsers with: npm run install-browsers-chromium"
-    echo "📄 For now, only HTTP-based tests were run (which is sufficient for validation)"
-    
-else
-    echo "⚠️  No browsers available for full automation testing"
-    echo "💡 Install browsers with: npm run install-browsers-chromium"
-    echo "📄 HTTP-based tests completed successfully (sufficient for CI/CD)"
-fi
+# Run basic E2E tests
+echo "🎭 Running basic E2E tests..."
+npx playwright test specs/public-pages.spec.js specs/user-auth.spec.js specs/admin-auth.spec.js specs/campaign-interactions.spec.js specs/all-endpoints.spec.js --reporter=line
+
+echo ""
+echo "🛤️  Running user journey tests..."
+npx playwright test specs/journeys/ --reporter=html
+
+echo ""
+echo "📊 Test report generated - run 'npm run test:report' to view"
 
 echo ""
 echo "✅ Test suite completed!"
