@@ -1,0 +1,19 @@
+{
+  "name": "obebibo-e2e-tests",
+  "version": "1.0.0",
+  "description": "E2E tests for Obebibo application using Playwright",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "validate": "node validate-endpoints.js",
+    "install-browsers": "playwright install",
+    "install-browsers-chromium": "playwright install chromium",
+    "pretest": "npm run validate"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}
