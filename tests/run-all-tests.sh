@@ -48,9 +48,13 @@ if npx playwright install-deps chromium --dry-run &>/dev/null && [ -d ~/.cache/m
     echo "✅ Browsers are available - running full E2E tests..."
     echo ""
     
-    # Run all Playwright tests
-    echo "🎭 Running full Playwright test suite..."
-    npx playwright test --reporter=html
+    # Run basic E2E tests
+    echo "🎭 Running basic E2E tests..."
+    npx playwright test specs/public-pages.spec.js specs/user-auth.spec.js specs/admin-auth.spec.js specs/campaign-interactions.spec.js specs/all-endpoints.spec.js --reporter=line
+    
+    echo ""
+    echo "🛤️  Running user journey tests..."
+    npx playwright test specs/journeys/ --reporter=html
     
     echo ""
     echo "📊 Test report generated - run 'npm run test:report' to view"

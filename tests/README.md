@@ -4,7 +4,7 @@ This directory contains comprehensive End-to-End (E2E) tests for the Obebibo app
 
 ## Overview
 
-The test suite covers all endpoints specified in `docs/frontend.md` to ensure the application meets its specifications:
+The test suite covers all endpoints specified in `docs/frontend.md` and includes comprehensive user journey tests to ensure the application meets its specifications and provides excellent user experience.
 
 ### Test Structure
 
@@ -17,11 +17,34 @@ tests/
 │   ├── user-auth.spec.js     # User authentication and protected pages
 │   ├── admin-auth.spec.js    # Admin authentication and admin pages
 │   ├── campaign-interactions.spec.js  # Campaign workflows
-│   └── all-endpoints.spec.js # Comprehensive endpoint coverage verification
+│   ├── all-endpoints.spec.js # Comprehensive endpoint coverage verification
+│   ├── http-based.spec.js    # HTTP-based validation tests
+│   └── journeys/             # User journey tests
+│       ├── journey-01-user-registration-to-application.spec.js
+│       ├── journey-02-company-registration-to-campaign.spec.js
+│       ├── journey-03-admin-login-to-dashboard.spec.js
+│       ├── journey-04-campaign-discovery-to-application.spec.js
+│       ├── journey-05-user-review-submission.spec.js
+│       ├── journey-06-admin-campaign-management.spec.js
+│       ├── journey-07-admin-shipment-management.spec.js
+│       └── journey-08-user-profile-management.spec.js
 └── utils/                    # Test utilities
     ├── auth.js               # Authentication helpers
     └── testData.js           # Test data management
 ```
+
+### User Journey Tests
+
+The test suite includes 8 comprehensive user journey tests that validate end-to-end workflows:
+
+1. **User Registration to Campaign Application** - Complete flow from service discovery to applying for campaigns
+2. **Company Registration to Campaign Creation** - Admin-managed company setup and campaign creation workflow  
+3. **Admin Login to Dashboard** - Complete admin authentication and dashboard access
+4. **Campaign Discovery to Application** - User journey from browsing campaigns to submitting applications
+5. **User Review Submission** - Complete review workflow from winning campaigns to posting reviews
+6. **Admin Campaign Management** - Comprehensive admin campaign management from creation to completion
+7. **Admin Shipment Management** - Full shipment workflow from winner selection to delivery confirmation
+8. **User Profile Management** - Complete user profile and account management functionality
 
 ### Endpoints Tested
 
@@ -90,6 +113,19 @@ npm test                           # All tests
 npm run test:headed               # With browser visible
 npm run test:debug                # Debug mode
 npm run test:ui                   # Interactive UI mode
+npm run test:journeys             # All user journey tests
+```
+
+### Individual journey tests
+```bash
+npm run test:journey-01           # User registration to application
+npm run test:journey-02           # Company registration to campaign
+npm run test:journey-03           # Admin login to dashboard
+npm run test:journey-04           # Campaign discovery to application
+npm run test:journey-05           # User review submission
+npm run test:journey-06           # Admin campaign management
+npm run test:journey-07           # Admin shipment management
+npm run test:journey-08           # User profile management
 ```
 
 ### View test reports
