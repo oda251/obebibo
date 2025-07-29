@@ -20,6 +20,9 @@ Rails.application.routes.draw do
     sign_out: 'logout'
   }
 
+  # Logout route for API compatibility
+  get '/logout', to: 'api/auth/auth#logout'
+
   # User-facing routes
   resources :campaigns, only: [:index, :show] do
     member do
@@ -75,6 +78,7 @@ Rails.application.routes.draw do
       post :register, to: 'auth#register'
       post :login, to: 'auth#login'
       post :logout, to: 'auth#logout'
+      get :logout, to: 'auth#logout'
     end
     
     namespace :admin do

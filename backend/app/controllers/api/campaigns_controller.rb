@@ -96,7 +96,7 @@ class Api::CampaignsController < Api::ApplicationController
       comment: review.comment,
       created_at: review.created_at,
       user: {
-        name: review.user.name
+        id: review.user.id
       }
     }
   end

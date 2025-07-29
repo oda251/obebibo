@@ -23,19 +23,25 @@ class Api::Auth::AuthController < Api::ApplicationController
 
   def logout
     sign_out(current_user) if user_signed_in?
-    render_success({}, 'ログアウトしました')
+    
+    # Redirect to home page for GET requests (web interface)
+    if request.get?
+      redirect_to root_path
+    else
+      # Return JSON for POST requests (API usage)
+      render_success({}, 'ログアウトしました')
+    end
   end
 
   private
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:email, :password, :password_confirmation)
   end
 
   def user_json(user)
     {
       id: user.id,
-      name: user.name,
       email: user.email,
       created_at: user.created_at
     }

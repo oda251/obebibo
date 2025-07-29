@@ -72,7 +72,7 @@
             <% @recent_entries.each do |entry| %>
               <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
                 <div>
-                  <p class="font-medium"><%= entry.user.name %></p>
+                  <p class="font-medium"><%= entry.user.email %></p>
                   <p class="text-sm text-gray-600"><%= entry.campaign.title %></p>
                   <p class="text-xs text-gray-500"><%= entry.created_at.strftime('%Y/%m/%d %H:%M') %></p>
                 </div>
@@ -102,7 +102,7 @@
             <% @recent_reviews.each do |review| %>
               <div class="p-3 bg-gray-50 rounded">
                 <div class="flex items-center justify-between mb-2">
-                  <p class="font-medium"><%= review.user.name %></p>
+                  <p class="font-medium"><%= review.user.email %></p>
                   <span class="text-yellow-500"><%= format_rating_stars(review.rating) %></span>
                 </div>
                 <p class="text-sm text-gray-600 mb-1"><%= review.campaign.title %></p>

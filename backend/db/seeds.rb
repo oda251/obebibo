@@ -25,7 +25,6 @@ end
 users = []
 5.times do |i|
   user = User.find_or_create_by(email: "user#{i+1}@example.com") do |u|
-    u.name = "ユーザー#{i+1}"
     u.password = "password"
     u.password_confirmation = "password"
   end

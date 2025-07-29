@@ -14,7 +14,7 @@
     <div class="mb-8">
       <h2 class="text-lg font-bold mb-4">応募者情報</h2>
       <div class="bg-gray-50 p-4 rounded">
-        <p><strong>お名前:</strong> <%= current_user.name %></p>
+        <p><strong>メールアドレス:</strong> <%= current_user.email %></p>
         <p><strong>メールアドレス:</strong> <%= current_user.email %></p>
         <% if current_user.default_address %>
           <p><strong>お届け先:</strong> <%= current_user.default_address.full_address %></p>

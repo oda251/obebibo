@@ -177,8 +177,7 @@ RSpec.describe "Frontend Endpoints E2E Tests", type: :request do
 
   def create_user
     User.create!(
-      name: "Test User",
-      email: "user@test.com", 
+      email: "user@test.com",
       password: "password",
       password_confirmation: "password"
     )

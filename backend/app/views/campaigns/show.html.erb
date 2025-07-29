@@ -40,7 +40,7 @@
             <% @reviews.each do |review| %>
               <div class="bg-gray-50 p-4 rounded">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="font-medium"><%= review.user.name %></span>
+                  <span class="font-medium"><%= review.user.email %></span>
                   <div class="flex items-center">
                     <% review.rating.times do %>
                       ★

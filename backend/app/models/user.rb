@@ -9,8 +9,6 @@ class User < ApplicationRecord
   has_many :reviews, dependent: :destroy
   has_many :campaigns, through: :entries
 
-  validates :name, presence: true
-
   def default_address
     addresses.find_by(is_default: true) || addresses.first
   end
