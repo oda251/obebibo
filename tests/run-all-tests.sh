@@ -30,29 +30,20 @@ if [ ! -d "node_modules" ]; then
     echo ""
 fi
 
-# Run endpoint validation
-echo "🌐 Running endpoint validation..."
-npm run validate
-echo ""
-
-# Check if browsers are installed
-echo "🌍 Checking browser availability..."
-if npx playwright install --dry-run &>/dev/null; then
-    echo "✅ Playwright browsers are available"
-    BROWSERS_AVAILABLE=true
-else
-    echo "⚠️  Browsers not available - attempting installation..."
-    if npx playwright install chromium &>/dev/null; then
+# Playwrightブラウザのインストールチェック（最初に実施）
+echo "🌍 Checking Playwright browser availability..."
+if ! npx playwright install --dry-run &>/dev/null; then
+    echo "⚠️  Playwright browsers not found - installing..."
+    if npx playwright install &>/dev/null; then
         echo "✅ Browsers installed successfully"
-        BROWSERS_AVAILABLE=true
     else
-        echo "⚠️  Browser installation failed, running HTTP-only tests"
-        echo "   (This is sufficient to validate all application functionality)"
-        BROWSERS_AVAILABLE=false
+        echo "❌ Browser installation failed. Exiting."
+        exit 1
     fi
+else
+    echo "✅ Playwright browsers are available"
 fi
 
-echo "✅ Browsers are available - running full E2E tests..."
 echo ""
 
 # Run HTTP-based tests
@@ -61,25 +52,15 @@ echo "   (These tests validate all endpoints without requiring browser automatio
 npx playwright test specs/http-based.spec.js --reporter=line
 echo ""
 
-if [ "$BROWSERS_AVAILABLE" = true ]; then
-    # Run basic E2E tests
-    echo "🎭 Running basic E2E tests..."
-    npx playwright test specs/public-pages.spec.js specs/user-auth.spec.js specs/admin-auth.spec.js specs/campaign-interactions.spec.js specs/all-endpoints.spec.js --reporter=line
-
-    echo ""
-    echo "🛤️  Running user journey tests..."
-    npx playwright test specs/journeys/ --reporter=html
-else
-    echo "⚠️  Skipping browser automation tests due to browser installation issues"
-    echo "   HTTP tests have validated all application functionality successfully"
-fi
+# Run basic E2E tests
+echo "🎭 Running basic E2E tests..."
+npx playwright test specs/public-pages.spec.js specs/user-auth.spec.js specs/admin-auth.spec.js specs/campaign-interactions.spec.js specs/all-endpoints.spec.js --reporter=line
 
 echo ""
-if [ "$BROWSERS_AVAILABLE" = true ]; then
-    echo "📊 Test report generated - run 'npm run test:report' to view"
-else
-    echo "📊 HTTP-based validation completed successfully"
-fi
+echo "🛤️  Running user journey tests..."
+npx playwright test specs/journeys/ --reporter=html
+
+echo "📊 Test report generated - run 'npm run test:report' to view"
 
 echo ""
 echo "✅ Test suite completed!"
@@ -91,11 +72,7 @@ echo "   • Authentication redirects work properly ✅"
 echo "   • Admin routes are protected ✅"
 echo "   • CSRF protection is in place ✅"
 echo "   • Error handling is working ✅"
-if [ "$BROWSERS_AVAILABLE" = true ]; then
-    echo "   • Full browser automation completed ✅"
-else
-    echo "   • Browser tests skipped (HTTP validation sufficient) ⚠️"
-fi
+echo "   • Full browser automation completed ✅"
 echo ""
 echo "🎯 Next steps:"
 echo "   • Run 'npm run test:ui' for interactive testing"
