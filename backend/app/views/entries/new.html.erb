@@ -47,7 +47,7 @@
         </label>
       </div>
       
-      <%= form_with url: campaign_entry_path(@campaign), method: :post, local: true do |form| %>
+      <%= form_with url: entry_campaign_path(@campaign), method: :post, local: true do |form| %>
         <div class="flex space-x-4">
           <%= form.submit "応募する", class: "btn btn-primary", data: { confirm: "この案件に応募しますか？" } %>
           <%= link_to "戻る", campaign_path(@campaign), class: "btn btn-secondary" %>

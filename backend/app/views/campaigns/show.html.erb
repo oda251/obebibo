@@ -88,7 +88,7 @@
               <% end %>
             <% end %>
           <% elsif @can_apply %>
-            <%= link_to "この案件に応募する", campaign_entry_path(@campaign), method: :get, class: "btn btn-primary text-lg px-8 py-3" %>
+            <%= link_to "この案件に応募する", entry_campaign_path(@campaign), method: :get, class: "btn btn-primary text-lg px-8 py-3" %>
           <% elsif @campaign.application_period? %>
             <p class="text-gray-600">この案件に応募するにはログインが必要です。</p>
             <%= link_to "ログイン", new_user_session_path, class: "btn btn-primary" %>
