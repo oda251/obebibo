@@ -1,0 +1,96 @@
+<div class="max-w-7xl mx-auto">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold">レビュー管理</h1>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="mb-6">
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-8">
+        <%= link_to "すべて", admin_reviews_path, 
+            class: "whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm #{params[:rating].blank? ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+        <%= link_to "★★★★★", admin_reviews_path(rating: 5), 
+            class: "whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm #{params[:rating] == '5' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+        <%= link_to "★★★★☆", admin_reviews_path(rating: 4), 
+            class: "whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm #{params[:rating] == '4' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+        <%= link_to "★★★☆☆", admin_reviews_path(rating: 3), 
+            class: "whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm #{params[:rating] == '3' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+        <%= link_to "★★☆☆☆", admin_reviews_path(rating: 2), 
+            class: "whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm #{params[:rating] == '2' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+        <%= link_to "★☆☆☆☆", admin_reviews_path(rating: 1), 
+            class: "whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm #{params[:rating] == '1' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Reviews Table -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <% if @reviews.any? %>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">レビュアー</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">案件</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">評価</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">コメント</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">投稿日</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @reviews.each do |review| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div>
+                  <div class="text-sm font-medium text-gray-900"><%= review.user.email %></div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900"><%= review.campaign.title %></div>
+                <div class="text-sm text-gray-500"><%= review.campaign.company&.name || 'N/A' %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="text-yellow-400">
+                    <% review.rating.times do %>★<% end %>
+                    <% (5 - review.rating).times do %>☆<% end %>
+                  </div>
+                  <span class="ml-2 text-sm text-gray-600">(<%= review.rating %>)</span>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-900">
+                  <%= truncate(review.comment, length: 100) %>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= review.created_at.strftime('%Y/%m/%d %H:%M') %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                <%= link_to "詳細", admin_review_path(review), class: "text-blue-600 hover:text-blue-900" %>
+                <%= link_to "削除", admin_review_path(review), method: :delete, 
+                    confirm: "本当に削除しますか？", 
+                    class: "text-red-600 hover:text-red-900" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <% if @reviews.respond_to?(:current_page) %>
+        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+          <%= paginate @reviews, param_name: :page %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">レビューがありません</h3>
+        <p class="mt-1 text-sm text-gray-500">商品の配送が完了すると、レビューが投稿されます。</p>
+      </div>
+    <% end %>
+  </div>
+</div>

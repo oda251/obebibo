@@ -16,7 +16,7 @@ class EntriesController < ApplicationController
     @entry = @campaign.entries.build(user: current_user)
     
     if @entry.save
-      redirect_to campaign_entry_done_path(@campaign), notice: '応募が完了しました'
+      redirect_to entry_done_campaign_path(@campaign), notice: '応募が完了しました'
     else
       render :new, alert: '応募に失敗しました'
     end
