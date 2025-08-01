@@ -7,6 +7,9 @@ up:
 stop:
 	@docker compose down
 
+scrap:
+	@docker compose down -v --remove-orphans
+
 build: stop
 	@docker compose up --build -d
 
@@ -21,4 +24,4 @@ seed: up
 
 re: stop all
 
-.PHONY: all up build stop migrate re test seed
+.PHONY: all up build stop migrate re test seed scrap
