@@ -1,0 +1,98 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">
+      「<%= @campaign.title %>」の応募者管理
+    </h1>
+    <%= link_to 'キャンペーン詳細', admin_campaign_path(@campaign), class: 'bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded' %>
+  </div>
+
+  <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="text-center">
+        <div class="text-2xl font-bold text-blue-600"><%= @entries.total_count %></div>
+        <div class="text-sm text-gray-500">総応募数</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl font-bold text-yellow-600"><%= @entries.where(status: 'pending').count %></div>
+        <div class="text-sm text-gray-500">審査中</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl font-bold text-green-600"><%= @entries.where(status: 'winner').count %></div>
+        <div class="text-sm text-gray-500">当選</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl font-bold text-red-600"><%= @entries.where(status: 'loser').count %></div>
+        <div class="text-sm text-gray-500">落選</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ユーザー</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">メールアドレス</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">応募日時</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ステータス</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @entries.each do |entry| %>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">ユーザー#<%= entry.user.id %></div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-500"><%= entry.user.email %></div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= entry.created_at.strftime('%Y/%m/%d %H:%M') %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                <%= case entry.status
+                    when 'pending' then 'bg-yellow-100 text-yellow-800'
+                    when 'winner' then 'bg-green-100 text-green-800'
+                    when 'loser' then 'bg-red-100 text-red-800'
+                    when 'shipped' then 'bg-blue-100 text-blue-800'
+                    when 'completed' then 'bg-purple-100 text-purple-800'
+                    end %>">
+                <%= case entry.status
+                    when 'pending' then '審査中'
+                    when 'winner' then '当選'
+                    when 'loser' then '落選'
+                    when 'shipped' then '発送済み'
+                    when 'completed' then '完了'
+                    end %>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <% if entry.status == 'pending' %>
+                <%= form_with url: admin_entry_path(entry), method: :patch, local: true, class: 'inline mr-2' do |form| %>
+                  <%= form.hidden_field :status, value: 'winner' %>
+                  <%= form.submit '当選', class: 'text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 px-2 py-1 rounded text-xs' %>
+                <% end %>
+                <%= form_with url: admin_entry_path(entry), method: :patch, local: true, class: 'inline' do |form| %>
+                  <%= form.hidden_field :status, value: 'loser' %>
+                  <%= form.submit '落選', class: 'text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-2 py-1 rounded text-xs' %>
+                <% end %>
+              <% elsif entry.status == 'winner' && !entry.shipment %>
+                <%= link_to '配送手配', admin_shipments_path(entry_id: entry.id), 
+                           class: 'text-blue-600 hover:text-blue-900' %>
+              <% elsif entry.shipment %>
+                <%= link_to '配送詳細', admin_shipment_path(entry.shipment), 
+                           class: 'text-blue-600 hover:text-blue-900' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-6">
+    <%= paginate @entries if respond_to?(:paginate) %>
+  </div>
+</div>
