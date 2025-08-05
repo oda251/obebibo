@@ -1,0 +1,141 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">配送詳細</h1>
+    <%= link_to '配送一覧に戻る', admin_shipments_path, class: 'bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded' %>
+  </div>
+
+  <div class="bg-white shadow-lg rounded-lg p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">配送情報</h3>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">配送ステータス</label>
+          <span class="mt-1 px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+            <%= case @shipment.status
+                when 'preparing' then 'bg-yellow-100 text-yellow-800'
+                when 'shipped' then 'bg-blue-100 text-blue-800'
+                when 'delivered' then 'bg-green-100 text-green-800'
+                when 'failed' then 'bg-red-100 text-red-800'
+                end %>">
+            <%= case @shipment.status
+                when 'preparing' then '準備中'
+                when 'shipped' then '発送済み'
+                when 'delivered' then '配達完了'
+                when 'failed' then '配送失敗'
+                end %>
+          </span>
+        </div>
+
+        <% if @shipment.shipped_at %>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">発送日時</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @shipment.shipped_at.strftime('%Y年%m月%d日 %H:%M') %></p>
+          </div>
+        <% end %>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">作成日時</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @shipment.created_at.strftime('%Y年%m月%d日 %H:%M') %></p>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">配送先情報</h3>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">郵便番号</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @shipment.address.postal_code %></p>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">住所</label>
+          <p class="mt-1 text-sm text-gray-900">
+            <%= @shipment.address.prefecture %><%= @shipment.address.city %><br>
+            <%= @shipment.address.address1 %>
+            <% if @shipment.address.address2.present? %>
+              <br><%= @shipment.address.address2 %>
+            <% end %>
+          </p>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">電話番号</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @shipment.address.phone %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-6 border-t border-gray-200">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">ユーザー情報</h3>
+          
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">ユーザーID</label>
+            <p class="mt-1 text-sm text-gray-900">ユーザー#<%= @shipment.user.id %></p>
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">メールアドレス</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @shipment.user.email %></p>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">キャンペーン情報</h3>
+          
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">タイトル</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @shipment.campaign.title %></p>
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">企業</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @shipment.campaign.company.name %></p>
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">応募日時</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @shipment.entry.created_at.strftime('%Y年%m月%d日 %H:%M') %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if @shipment.status == 'preparing' %>
+      <div class="mt-6 pt-6 border-t border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">ステータス変更</h3>
+        
+        <div class="flex space-x-4">
+          <%= form_with url: admin_shipment_path(@shipment), method: :patch, local: true, class: 'inline' do |form| %>
+            <%= form.hidden_field :status, value: 'shipped' %>
+            <%= form.hidden_field :shipped_at, value: Time.current %>
+            <%= form.submit '発送済みにする', class: 'bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' %>
+          <% end %>
+          
+          <%= form_with url: admin_shipment_path(@shipment), method: :patch, local: true, class: 'inline' do |form| %>
+            <%= form.hidden_field :status, value: 'failed' %>
+            <%= form.submit '配送失敗にする', class: 'bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded' %>
+          <% end %>
+        </div>
+      </div>
+    <% elsif @shipment.status == 'shipped' %>
+      <div class="mt-6 pt-6 border-t border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">ステータス変更</h3>
+        
+        <div class="flex space-x-4">
+          <%= form_with url: admin_shipment_path(@shipment), method: :patch, local: true, class: 'inline' do |form| %>
+            <%= form.hidden_field :status, value: 'delivered' %>
+            <%= form.submit '配達完了にする', class: 'bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded' %>
+          <% end %>
+          
+          <%= form_with url: admin_shipment_path(@shipment), method: :patch, local: true, class: 'inline' do |form| %>
+            <%= form.hidden_field :status, value: 'failed' %>
+            <%= form.submit '配送失敗にする', class: 'bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded' %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

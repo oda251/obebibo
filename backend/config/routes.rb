@@ -64,7 +64,7 @@ Rails.application.routes.draw do
       member do
         post :entry
         get :reviews
-        post :reviews
+        post :reviews, to: 'campaigns#create_review'
       end
     end
     
