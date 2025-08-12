@@ -45,7 +45,7 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
               <%= link_to '詳細', admin_campaign_path(campaign), class: 'text-indigo-600 hover:text-indigo-900 mr-3' %>
-              <%= link_to '応募者', admin_campaign_entries_path(campaign), class: 'text-green-600 hover:text-green-900 mr-3' %>
+              <%= link_to '応募者', entries_admin_campaign_path(campaign), class: 'text-green-600 hover:text-green-900 mr-3' %>
               <%= link_to '編集', edit_admin_campaign_path(campaign), class: 'text-blue-600 hover:text-blue-900 mr-3' %>
               <%= link_to '削除', admin_campaign_path(campaign), method: :delete, 
                           confirm: '本当に削除しますか？', 
