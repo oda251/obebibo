@@ -3,7 +3,7 @@
     <h1 class="text-3xl font-bold text-gray-800">キャンペーン詳細</h1>
     <div>
       <%= link_to '編集', edit_admin_campaign_path(@campaign), class: 'bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2' %>
-      <%= link_to '応募者管理', admin_campaign_entries_path(@campaign), class: 'bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2' %>
+      <%= link_to '応募者管理', entries_admin_campaign_path(@campaign), class: 'bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2' %>
       <%= link_to '一覧に戻る', admin_campaigns_path, class: 'bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded' %>
     </div>
   </div>
