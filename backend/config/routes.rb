@@ -28,7 +28,7 @@ Rails.application.routes.draw do
     member do
       get :entry, to: 'entries#new'
       post :entry, to: 'entries#create'
-      get 'entry/done', to: 'entries#done'
+      get 'entry/done', to: 'entries#done', as: 'entry_done'
       resources :reviews, only: [:create, :index]
     end
   end
