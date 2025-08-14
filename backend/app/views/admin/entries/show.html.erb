@@ -1,0 +1,115 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">応募詳細</h1>
+    <%= link_to '応募一覧に戻る', admin_entries_path, class: 'bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded' %>
+  </div>
+
+  <div class="bg-white shadow-lg rounded-lg p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">応募情報</h3>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">ユーザー</label>
+          <p class="mt-1 text-sm text-gray-900">
+            ユーザー#<%= @entry.user.id %><br>
+            <span class="text-gray-500"><%= @entry.user.email %></span>
+          </p>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">応募日時</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @entry.created_at.strftime('%Y年%m月%d日 %H:%M') %></p>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">現在のステータス</label>
+          <span class="mt-1 px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+            <%= case @entry.status
+                when 'pending' then 'bg-yellow-100 text-yellow-800'
+                when 'winner' then 'bg-green-100 text-green-800'
+                when 'loser' then 'bg-red-100 text-red-800'
+                when 'shipped' then 'bg-blue-100 text-blue-800'
+                when 'completed' then 'bg-purple-100 text-purple-800'
+                end %>">
+            <%= case @entry.status
+                when 'pending' then '審査中'
+                when 'winner' then '当選'
+                when 'loser' then '落選'
+                when 'shipped' then '発送済み'
+                when 'completed' then '完了'
+                end %>
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">キャンペーン情報</h3>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">タイトル</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @entry.campaign.title %></p>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">企業</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @entry.campaign.company.name %></p>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">応募期間</label>
+          <p class="mt-1 text-sm text-gray-900">
+            <%= @entry.campaign.start_at.strftime('%Y/%m/%d') %> - 
+            <%= @entry.campaign.end_at.strftime('%Y/%m/%d') %>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <% if @entry.status == 'pending' %>
+      <div class="mt-6 pt-6 border-t border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">ステータス変更</h3>
+        
+        <div class="flex space-x-4">
+          <%= form_with url: admin_entry_path(@entry), method: :patch, local: true, class: 'inline' do |form| %>
+            <%= form.hidden_field :status, value: 'winner' %>
+            <%= form.submit '当選にする', class: 'bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded' %>
+          <% end %>
+          
+          <%= form_with url: admin_entry_path(@entry), method: :patch, local: true, class: 'inline' do |form| %>
+            <%= form.hidden_field :status, value: 'loser' %>
+            <%= form.submit '落選にする', class: 'bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded' %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @entry.status == 'winner' && @entry.shipment %>
+      <div class="mt-6 pt-6 border-t border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">配送情報</h3>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">配送ステータス</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @entry.shipment.status %></p>
+        </div>
+
+        <% if @entry.shipment.shipped_at %>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">発送日時</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @entry.shipment.shipped_at.strftime('%Y年%m月%d日 %H:%M') %></p>
+          </div>
+        <% end %>
+
+        <%= link_to '配送詳細', admin_shipment_path(@entry.shipment), 
+                   class: 'bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' %>
+      </div>
+    <% elsif @entry.status == 'winner' %>
+      <div class="mt-6 pt-6 border-t border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">配送手配</h3>
+        <p class="text-sm text-gray-600 mb-4">まだ配送が手配されていません。</p>
+        <%= link_to '配送手配', admin_shipments_path(entry_id: @entry.id), 
+                   class: 'bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' %>
+      </div>
+    <% end %>
+  </div>
+</div>

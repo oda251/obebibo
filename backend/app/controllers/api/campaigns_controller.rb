@@ -44,6 +44,18 @@ class Api::CampaignsController < Api::ApplicationController
     }
   end
 
+  def create_review
+    return render_error('ログインが必要です', :unauthorized) unless user_signed_in?
+    
+    @review = @campaign.reviews.build(review_params.merge(user: current_user))
+    
+    if @review.save
+      render_success({ review: review_json(@review) }, 'レビューが投稿されました')
+    else
+      render_error(@review.errors.full_messages.join(', '))
+    end
+  end
+
   private
 
   def set_campaign
@@ -52,6 +64,10 @@ class Api::CampaignsController < Api::ApplicationController
 
   def already_applied?
     current_user&.entries&.exists?(campaign: @campaign)
+  end
+
+  def review_params
+    params.require(:review).permit(:rating, :comment)
   end
 
   def campaign_json(campaign)

@@ -12,4 +12,8 @@ class User < ApplicationRecord
   def default_address
     addresses.find_by(is_default: true) || addresses.first
   end
+
+  def has_default_address?
+    default_address.present?
+  end
 end
