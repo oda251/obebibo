@@ -24,6 +24,10 @@ class Admin::EntriesController < Admin::ApplicationController
   end
 
   def entry_params
-    params.require(:entry).permit(:status)
+    if params[:entry].present?
+      params.require(:entry).permit(:status)
+    else
+      params.permit(:status)
+    end
   end
 end
